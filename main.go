@@ -2,8 +2,8 @@ package main
 
 import (
 	"fmt"
-	"midjourney/handlers"
-	"midjourney/initialization"
+	"github.com/562589540/Go-Midjourney/handlers"
+	"github.com/562589540/Go-Midjourney/initialization"
 	"os"
 
 	"github.com/gin-gonic/gin"
