@@ -53,6 +53,10 @@ func getDefaultValue(key string, defaultValue string) string {
 	}
 }
 
+func NewConfig() {
+	config = &Config{}
+}
+
 // SetDiscordUserToken 手动设置用户token
 func SetDiscordUserToken(discordUserToken string) {
 	config.DISCORD_USER_TOKEN = discordUserToken
