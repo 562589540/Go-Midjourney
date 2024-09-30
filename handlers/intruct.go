@@ -1,7 +1,7 @@
 package handlers
 
 import (
-	"midjourney/services"
+	"github.com/562589540/Go-Midjourney/services"
 )
 
 func GenerateImage(prompt string) error {

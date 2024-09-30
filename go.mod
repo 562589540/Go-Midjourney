@@ -1,4 +1,5 @@
-module midjourney
+module github.com/562589540/Go-Midjourney
+
 
 go 1.18
 

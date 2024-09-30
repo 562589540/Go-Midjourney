@@ -3,8 +3,8 @@ package handlers
 import (
 	"encoding/json"
 	"fmt"
-	"midjourney/initialization"
-	"midjourney/services"
+	"github.com/562589540/Go-Midjourney/initialization"
+	"github.com/562589540/Go-Midjourney/services"
 	"regexp"
 	"strconv"
 	"strings"

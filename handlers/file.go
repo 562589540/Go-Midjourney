@@ -3,7 +3,7 @@ package handlers
 import (
 	"bytes"
 	"fmt"
-	"midjourney/services"
+	"github.com/562589540/Go-Midjourney/services"
 	"net/http"
 
 	"github.com/gin-gonic/gin"

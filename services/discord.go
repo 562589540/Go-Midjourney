@@ -4,8 +4,8 @@ import (
 	"bytes"
 	"encoding/json"
 	"fmt"
+	config "github.com/562589540/Go-Midjourney/initialization"
 	"io/ioutil"
-	config "midjourney/initialization"
 	"net/http"
 	"path/filepath"
 )
