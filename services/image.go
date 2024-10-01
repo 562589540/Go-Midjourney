@@ -10,8 +10,8 @@ import (
 	"path/filepath"
 )
 
-// 下载图片并保存到本地
-func downloadImage(url, filepath string) error {
+// DownloadImage 下载图片并保存到本地
+func DownloadImage(url, filepath string) error {
 	// 发送HTTP请求获取图片
 	resp, err := http.Get(url)
 	if err != nil {
@@ -41,8 +41,8 @@ func downloadImage(url, filepath string) error {
 	return nil
 }
 
-// 将四宫格图片切割成四张单独的图片
-func splitImage(inputFile string, outputDir string) error {
+// SplitImage 将四宫格图片切割成四张单独的图片
+func SplitImage(inputFile string, outputDir string) error {
 	// 打开四宫格图片
 	file, err := os.Open(inputFile)
 	if err != nil {
