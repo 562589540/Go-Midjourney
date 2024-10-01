@@ -15,6 +15,15 @@ const (
 	CallBackDirect CallBackType = "direct"
 )
 
+// ListenType 监听类型
+type ListenType string
+
+// 定义允许的回调类型常量
+const (
+	ListenBot  ListenType = "bot"
+	ListenUser ListenType = "user"
+)
+
 type Config struct {
 	DISCORD_USER_TOKEN string
 	DISCORD_BOT_TOKEN  string
@@ -22,6 +31,7 @@ type Config struct {
 	DISCORD_CHANNEL_ID string
 	CB_URL             string
 	MJ_PORT            string
+	ListenType         ListenType
 	CallBackType       CallBackType // 使用自定义类型
 }
 
@@ -39,6 +49,7 @@ func LoadConfig(cfg string) *Config {
 		CB_URL:             getViperStringValue("CB_URL"),
 		MJ_PORT:            getDefaultValue("MJ_PORT", "16007"),
 		CallBackType:       CallBackType(getDefaultValue("CallBackType", "post")),
+		ListenType:         ListenType(getDefaultValue("ListenType", "bot")),
 	}
 	return config
 }
@@ -91,4 +102,9 @@ func SetDiscordChannelId(discordChannelId string) {
 // SetCallBackType 手动设置回掉设置
 func SetCallBackType(callBackType CallBackType) {
 	config.CallBackType = callBackType
+}
+
+// SetListenType 手动设置监控类型
+func SetListenType(ListenType ListenType) {
+	config.ListenType = ListenType
 }

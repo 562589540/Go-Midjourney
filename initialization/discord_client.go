@@ -16,7 +16,15 @@ func LoadDiscordClient(create func(s *discord.Session, m *discord.MessageCreate)
 	}
 
 	var err error
-	discordClient, err = discord.New("Bot " + config.DISCORD_BOT_TOKEN)
+
+	if config.ListenType == ListenBot {
+		//使用机器人监听
+		discordClient, err = discord.New("Bot " + config.DISCORD_BOT_TOKEN)
+	} else {
+		//使用用户监听 封禁风险较高
+		discordClient, err = discord.New(config.DISCORD_USER_TOKEN)
+	}
+
 	if err != nil {
 		return fmt.Errorf("error creating Discord session: %v", err)
 	}

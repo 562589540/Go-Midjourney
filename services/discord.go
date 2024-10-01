@@ -52,12 +52,12 @@ func GenerateImage(prompt string) error {
 	return err
 }
 
-func Upscale(index int64, messageId string, messageHash string) error {
+func Upscale(index int64, messageId string, messageHash string, messageFlags int64) error {
 	requestBody := ReqUpscaleDiscord{
 		Type:          3,
 		GuildId:       config.GetConfig().DISCORD_SERVER_ID,
 		ChannelId:     config.GetConfig().DISCORD_CHANNEL_ID,
-		MessageFlags:  0,
+		MessageFlags:  messageFlags,
 		MessageId:     messageId,
 		ApplicationId: appId,
 		SessionId:     SessionID,

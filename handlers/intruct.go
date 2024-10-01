@@ -9,8 +9,8 @@ func GenerateImage(prompt string) error {
 	return err
 }
 
-func ImageUpscale(index int64, discordMsgId string, msgHash string) error {
-	err := services.Upscale(index, discordMsgId, msgHash)
+func ImageUpscale(index int64, discordMsgId string, msgHash string, messageFlags int64) error {
+	err := services.Upscale(index, discordMsgId, msgHash, messageFlags)
 	return err
 }
 
