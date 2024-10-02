@@ -58,12 +58,20 @@ func DiscordMsgCreate(s *discord.Session, m *discord.MessageCreate) {
 		trigger(m.Content, FirstTrigger)
 		return
 	}
+
+	//快速出图用尽
+
 	for _, attachment := range m.Attachments {
 		if attachment.Width > 0 && attachment.Height > 0 {
 			//绘画结束
 			replay(m)
 			return
 		}
+	}
+
+	if len(m.Embeds) > 0 {
+		send(m.Embeds)
+		return
 	}
 }
 
