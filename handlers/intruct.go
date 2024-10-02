@@ -14,8 +14,8 @@ func ImageUpscale(index int64, discordMsgId string, msgHash string, messageFlags
 	return err
 }
 
-func ImageVariation(index int64, discordMsgId string, msgHash string) error {
-	err := services.Variate(index, discordMsgId, msgHash)
+func ImageVariation(index int64, discordMsgId string, msgHash string, messageFlags int64) error {
+	err := services.Variate(index, discordMsgId, msgHash, messageFlags)
 	return err
 }
 

@@ -91,3 +91,26 @@ type ReqCommandAttachments struct {
 	Filename       string `json:"filename"`
 	UploadFilename string `json:"uploaded_filename"`
 }
+
+type ReqVariationVariatePromptDiscord struct {
+	Type          int64             `json:"type"`
+	GuildId       string            `json:"guild_id"`
+	ChannelId     string            `json:"channel_id"`
+	ApplicationId string            `json:"application_id"`
+	Data          VariatePromptData `json:"data"`
+	SessionId     string            `json:"session_id"`
+	Nonce         string            `json:"nonce,omitempty"`
+}
+
+type VariatePromptData struct {
+	Id         string      `json:"id"`
+	CustomId   string      `json:"custom_id"`
+	Components []Component `json:"components"`
+}
+
+type Component struct {
+	Type       int64       `json:"type,omitempty"`
+	Components []Component `json:"components,omitempty"`
+	CustomId   string      `json:"custom_id,omitempty"`
+	Value      string      `json:"value,omitempty"`
+}

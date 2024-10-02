@@ -6,6 +6,8 @@ import (
 	"github.com/spf13/viper"
 )
 
+var Debug = false
+
 // 定义回调类型为字符串类型
 type CallBackType string
 
@@ -107,4 +109,8 @@ func SetCallBackType(callBackType CallBackType) {
 // SetListenType 手动设置监控类型
 func SetListenType(ListenType ListenType) {
 	config.ListenType = ListenType
+}
+
+func SetDebug(debug bool) {
+	Debug = debug
 }

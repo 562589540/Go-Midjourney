@@ -153,6 +153,11 @@ func request(params ReqCb) {
 
 // debug打印信息
 func debugDiscordMsg(m any, t string) {
+
+	if !initialization.Debug {
+		return
+	}
+
 	// 序列化 m 结构体为 JSON 格式
 	jsonData, err := json.MarshalIndent(m, "", "  ") // 将结构体格式化为漂亮的 JSON
 	if err != nil {

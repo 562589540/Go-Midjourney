@@ -79,6 +79,33 @@ func IsFirstGeneration(content string) bool {
 
 // IsUpscaledImage 判断是否是放大的单张图片
 func IsUpscaledImage(content string) bool {
-	// 如果 content 中包含 "Image #"，则为放大的图片
 	return strings.Contains(content, "Image #")
+}
+
+// IsMakingVariations 开始重新绘图 一般只有自己能监控到
+func IsMakingVariations(content string) bool {
+	return strings.Contains(content, "Making variations for image #")
+}
+
+// IsVariations 是重新绘图的消息 进度和结果
+func IsVariations(content string) bool {
+	return strings.Contains(content, "Variations (Strong)")
+}
+
+// ExtractImageNumber 提取放大的图片编号
+func ExtractImageNumber(content string) (int, error) {
+	// 定义正则表达式来匹配 "Image #数字"
+	re := regexp.MustCompile(`Image #(\d+)`)
+	matches := re.FindStringSubmatch(content)
+
+	// 检查是否匹配
+	if len(matches) > 1 {
+		// 将匹配到的数字部分转换为整数
+		imageNumber, err := strconv.Atoi(matches[1])
+		if err != nil {
+			return 0, fmt.Errorf("无法转换为数字: %v", err)
+		}
+		return imageNumber, nil
+	}
+	return 0, fmt.Errorf("未找到匹配的放大编号")
 }

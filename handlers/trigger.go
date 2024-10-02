@@ -29,7 +29,7 @@ func MidjourneyBot(c *gin.Context) {
 	case "upscale":
 		err = ImageUpscale(body.Index, body.DiscordMsgId, body.MsgHash, body.Flags)
 	case "variation":
-		err = ImageVariation(body.Index, body.DiscordMsgId, body.MsgHash)
+		err = ImageVariation(body.Index, body.DiscordMsgId, body.MsgHash, body.Flags)
 	case "maxUpscale":
 		err = ImageMaxUpscale(body.DiscordMsgId, body.MsgHash)
 	case "reset":

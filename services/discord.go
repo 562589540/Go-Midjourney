@@ -93,12 +93,12 @@ func MaxUpscale(messageId string, messageHash string) error {
 	return err
 }
 
-func Variate(index int64, messageId string, messageHash string) error {
+func Variate(index int64, messageId string, messageHash string, messageFlags int64) error {
 	requestBody := ReqVariationDiscord{
 		Type:          3,
 		GuildId:       config.GetConfig().DISCORD_SERVER_ID,
 		ChannelId:     config.GetConfig().DISCORD_CHANNEL_ID,
-		MessageFlags:  0,
+		MessageFlags:  messageFlags,
 		MessageId:     messageId,
 		ApplicationId: appId,
 		SessionId:     SessionID,
@@ -108,6 +108,44 @@ func Variate(index int64, messageId string, messageHash string) error {
 		},
 	}
 	_, err := request(requestBody, url)
+	return err
+}
+
+func VariatePrompt(index int64, messageId string, messageHash string, prompt string) error {
+	requestBody := ReqVariationVariatePromptDiscord{
+		Type:          5,
+		ApplicationId: appId,
+		ChannelId:     config.GetConfig().DISCORD_CHANNEL_ID,
+		GuildId:       config.GetConfig().DISCORD_SERVER_ID,
+		Data: VariatePromptData{
+			Id:       messageId,
+			CustomId: fmt.Sprintf("MJ::RemixModal::%s::%d::1", messageHash, index),
+			Components: []Component{
+				{
+					Type: 1,
+					Components: []Component{
+						{
+							Type:     4,
+							CustomId: "MJ::RemixModal::new_prompt",
+							Value:    prompt,
+						},
+					},
+				},
+			},
+		},
+		SessionId: SessionID,
+	}
+
+	// 将结构体转换为 JSON 字符串并格式化
+	jsonData, err := json.MarshalIndent(requestBody, "", "  ")
+	if err != nil {
+		return err
+	}
+
+	// 打印 JSON 格式的 requestBody
+	fmt.Println(string(jsonData))
+
+	_, err = request(requestBody, url)
 	return err
 }
 
