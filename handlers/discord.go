@@ -69,7 +69,7 @@ func DiscordMsgCreate(s *discord.Session, m *discord.MessageCreate) {
 	}
 
 	if len(m.Embeds) > 0 {
-		send(m.Embeds, m, nil)
+		sendError(m.Embeds, m.Message)
 		return
 	}
 }
@@ -102,7 +102,7 @@ func DiscordMsgUpdate(s *discord.Session, m *discord.MessageUpdate) {
 		return
 	}
 	if len(m.Embeds) > 0 {
-		send(m.Embeds, nil, m)
+		sendError(m.Embeds, m.Message)
 		return
 	}
 }
@@ -110,6 +110,7 @@ func DiscordMsgUpdate(s *discord.Session, m *discord.MessageUpdate) {
 type ReqCb struct {
 	Embeds        []*discord.MessageEmbed `json:"embeds,omitempty"`
 	Discord       *discord.MessageCreate  `json:"discord,omitempty"`
+	Message       *discord.Message        `json:"message,omitempty"`
 	DiscordUpdate *discord.MessageUpdate  `json:"discordUpdate,omitempty"`
 	Content       string                  `json:"content,omitempty"`
 	Progress      int                     `json:"progress,omitempty"`
@@ -130,6 +131,15 @@ func send(embeds []*discord.MessageEmbed, m *discord.MessageCreate, m2 *discord.
 		DiscordUpdate: m2,
 		Embeds:        embeds,
 		Type:          RichText,
+	}
+	request(body)
+}
+
+func sendError(embeds []*discord.MessageEmbed, m *discord.Message) {
+	body := ReqCb{
+		Message: m,
+		Embeds:  embeds,
+		Type:    RichText,
 	}
 	request(body)
 }
