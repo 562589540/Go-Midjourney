@@ -1,7 +1,9 @@
 package services
 
 import (
+	"encoding/json"
 	"fmt"
+	"github.com/562589540/Go-Midjourney/initialization"
 	discord "github.com/bwmarrin/discordgo"
 	"regexp"
 	"strconv"
@@ -108,4 +110,22 @@ func ExtractImageNumber(content string) (int, error) {
 		return imageNumber, nil
 	}
 	return 0, fmt.Errorf("未找到匹配的放大编号")
+}
+
+// DebugDiscordMsg debug打印信息
+func DebugDiscordMsg(m any, t string) {
+
+	if !initialization.Debug {
+		return
+	}
+
+	// 序列化 m 结构体为 JSON 格式
+	jsonData, err := json.MarshalIndent(m, "", "  ") // 将结构体格式化为漂亮的 JSON
+	if err != nil {
+		fmt.Println("Error serializing message:", err)
+		return
+	}
+	// 打印序列化后的 JSON 字符串
+	fmt.Println(t)
+	fmt.Println(string(jsonData))
 }

@@ -1,16 +1,18 @@
 module github.com/562589540/Go-Midjourney
 
-
 go 1.18
 
 require (
-	github.com/bwmarrin/discordgo v0.27.1
+	github.com/bwmarrin/discordgo v0.28.1
 	github.com/gin-gonic/gin v1.8.2
 	github.com/google/uuid v1.1.2
 	github.com/k0kubun/pp/v3 v3.2.0
+	github.com/sony/sonyflake v1.2.0
 	github.com/spf13/pflag v1.0.5
 	github.com/spf13/viper v1.14.0
 )
+
+replace github.com/bwmarrin/discordgo => github.com/562589540/discordgo v0.0.0-20241003074906-0153af1f8353
 
 require (
 	github.com/fsnotify/fsnotify v1.6.0 // indirect
@@ -31,7 +33,6 @@ require (
 	github.com/modern-go/reflect2 v1.0.2 // indirect
 	github.com/pelletier/go-toml v1.9.5 // indirect
 	github.com/pelletier/go-toml/v2 v2.0.6 // indirect
-	github.com/sony/sonyflake v1.2.0 // indirect
 	github.com/spf13/afero v1.9.3 // indirect
 	github.com/spf13/cast v1.5.0 // indirect
 	github.com/spf13/jwalterweatherman v1.1.0 // indirect

@@ -223,6 +223,48 @@ func Attachments(name string, size int64) (ResAttachments, error) {
 	return data, err
 }
 
+func GetMessage(limit int) error {
+	getMessageUrl := fmt.Sprintf("https://discord.com/api/v9/channels/%s/messages?limit=%d", config.GetConfig().DISCORD_CHANNEL_ID, limit)
+
+	req, err := http.NewRequest("GET", getMessageUrl, nil)
+
+	if err != nil {
+		return fmt.Errorf("error creating request:%v", err)
+	}
+
+	req.Header.Set("Content-Type", "application/json")
+	req.Header.Set("Authorization", config.GetConfig().DISCORD_USER_TOKEN)
+
+	client := &http.Client{}
+	resp, err := client.Do(req)
+	if err != nil {
+		return fmt.Errorf("error making request:%v", err)
+
+	}
+	defer resp.Body.Close()
+	body, err := ioutil.ReadAll(resp.Body)
+	if err != nil {
+		return fmt.Errorf("Error reading response:%v", err)
+
+	}
+	// 使用 map[string]interface{} 解析 JSON 响应
+	var result []map[string]interface{}
+	err = json.Unmarshal(body, &result)
+	if err != nil {
+		return fmt.Errorf("error unmarshalling JSON: %v", err)
+	}
+
+	// 将解析后的 JSON 格式化输出
+	jsonData, err := json.MarshalIndent(result, "", "  ")
+	if err != nil {
+		return fmt.Errorf("error marshalling JSON: %v", err)
+	}
+
+	// 打印格式化后的 JSON
+	fmt.Println(string(jsonData))
+	return nil
+}
+
 func request(params interface{}, url string) ([]byte, error) {
 	requestData, err := json.Marshal(params)
 	if err != nil {

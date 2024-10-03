@@ -1,7 +1,6 @@
 package handlers
 
 import (
-	"encoding/json"
 	"fmt"
 	"github.com/562589540/Go-Midjourney/initialization"
 	"github.com/562589540/Go-Midjourney/services"
@@ -42,7 +41,7 @@ func DiscordMsgCreate(s *discord.Session, m *discord.MessageCreate) {
 		return
 	}
 
-	debugDiscordMsg(m, "消息创建")
+	services.DebugDiscordMsg(m, "消息创建")
 
 	/******** *********/
 	pp.Println(m.Content)
@@ -90,7 +89,7 @@ func DiscordMsgUpdate(s *discord.Session, m *discord.MessageUpdate) {
 		return
 	}
 
-	debugDiscordMsg(m, "消息更新")
+	services.DebugDiscordMsg(m, "消息更新")
 
 	//进度更新
 	progress, err := services.ExtractProgress(m.Content)
@@ -157,22 +156,4 @@ func request(params ReqCb) {
 	if err := handler.HandleCallback(params); err != nil {
 		fmt.Printf("Error during callback: %v\n", err)
 	}
-}
-
-// debug打印信息
-func debugDiscordMsg(m any, t string) {
-
-	if !initialization.Debug {
-		return
-	}
-
-	// 序列化 m 结构体为 JSON 格式
-	jsonData, err := json.MarshalIndent(m, "", "  ") // 将结构体格式化为漂亮的 JSON
-	if err != nil {
-		fmt.Println("Error serializing message:", err)
-		return
-	}
-	// 打印序列化后的 JSON 字符串
-	fmt.Println(t)
-	fmt.Println(string(jsonData))
 }

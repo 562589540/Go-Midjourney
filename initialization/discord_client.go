@@ -2,19 +2,12 @@ package initialization
 
 import (
 	"fmt"
-
 	discord "github.com/bwmarrin/discordgo"
 )
 
 var discordClient *discord.Session
 
-func LoadDiscordClient(create func(s *discord.Session, m *discord.MessageCreate), update func(s *discord.Session, m *discord.MessageUpdate)) error {
-	// 如果客户端已经启动，避免重复启动
-	if discordClient != nil {
-		fmt.Println("Discord client is already running")
-		return nil
-	}
-
+func initDiscord() error {
 	var err error
 
 	if config.ListenType == ListenBot {
@@ -27,6 +20,21 @@ func LoadDiscordClient(create func(s *discord.Session, m *discord.MessageCreate)
 
 	if err != nil {
 		return fmt.Errorf("error creating Discord session: %v", err)
+	}
+
+	return nil
+}
+
+func LoadDiscordClient(create func(s *discord.Session, m *discord.MessageCreate), update func(s *discord.Session, m *discord.MessageUpdate)) error {
+	// 如果客户端已经启动，避免重复启动
+	if discordClient != nil {
+		fmt.Println("Discord client is already running")
+		return nil
+	}
+
+	err := initDiscord()
+	if err != nil {
+		return err
 	}
 
 	err = discordClient.Open()
@@ -58,4 +66,15 @@ func StopDiscordMonitor() {
 
 func GetDiscordClient() *discord.Session {
 	return discordClient
+}
+
+func GetMessage(limit int) ([]*discord.Message, error) {
+	var err error
+	if discordClient == nil {
+		err = initDiscord()
+		if err != nil {
+			return nil, err
+		}
+	}
+	return discordClient.ChannelMessages(config.DISCORD_CHANNEL_ID, limit, "", "", "")
 }
