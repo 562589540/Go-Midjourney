@@ -33,3 +33,8 @@ func ImageDescribe(uploadName string) error {
 	err := services.Describe(uploadName)
 	return err
 }
+
+func UpscaleSubtle(discordMsgId string, msgHash string, messageFlags int64, nonce string) error {
+	err := services.UpscaleSubtle(discordMsgId, msgHash, messageFlags, nonce)
+	return err
+}

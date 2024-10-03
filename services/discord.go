@@ -72,6 +72,26 @@ func Upscale(index int64, messageId string, messageHash string, messageFlags int
 	return err
 }
 
+// UpscaleSubtle 轻微放大：对图像进行轻微的放大处理，保持图像的细节相对不变，只是提升分辨率。
+func UpscaleSubtle(messageId string, messageHash string, messageFlags int64, nonce string) error {
+	requestBody := ReqUpscaleDiscord{
+		Type:          3,
+		GuildId:       config.GetConfig().DISCORD_SERVER_ID,
+		ChannelId:     config.GetConfig().DISCORD_CHANNEL_ID,
+		MessageFlags:  messageFlags,
+		MessageId:     messageId,
+		ApplicationId: appId,
+		SessionId:     SessionID,
+		Data: UpscaleData{
+			ComponentType: 2,
+			CustomId:      fmt.Sprintf("MJ::JOB::upsample_v6r1_2x_subtle::1::%s::SOLO", messageHash),
+		},
+		Nonce: nonce,
+	}
+	_, err := request(requestBody, url)
+	return err
+}
+
 // 未知
 func MaxUpscale(messageId string, messageHash string) error {
 	requestBody := ReqUpscaleDiscord{
@@ -87,11 +107,6 @@ func MaxUpscale(messageId string, messageHash string) error {
 			CustomId:      fmt.Sprintf("MJ::JOB::variation::1::%s::SOLO", messageHash),
 		},
 	}
-
-	data, _ := json.Marshal(requestBody)
-
-	fmt.Println("max upscale request body: ", string(data))
-
 	_, err := request(requestBody, url)
 	return err
 }
@@ -228,6 +243,21 @@ func Attachments(name string, size int64) (ResAttachments, error) {
 	}
 
 	return data, err
+}
+
+// 生成U指令结构体
+func genUpscaleDiscordReq(messageId, nonce string, data UpscaleData) ReqUpscaleDiscord {
+	return ReqUpscaleDiscord{
+		Type:          3,
+		GuildId:       config.GetConfig().DISCORD_SERVER_ID,
+		ChannelId:     config.GetConfig().DISCORD_CHANNEL_ID,
+		MessageFlags:  0,
+		MessageId:     messageId,
+		ApplicationId: appId,
+		SessionId:     SessionID,
+		Data:          data,
+		Nonce:         nonce,
+	}
 }
 
 func request(params interface{}, url string) ([]byte, error) {
