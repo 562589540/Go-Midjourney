@@ -69,7 +69,7 @@ func DiscordMsgCreate(s *discord.Session, m *discord.MessageCreate) {
 	}
 
 	if len(m.Embeds) > 0 {
-		send(m.Embeds)
+		send(m.Embeds, m, nil)
 		return
 	}
 }
@@ -102,7 +102,7 @@ func DiscordMsgUpdate(s *discord.Session, m *discord.MessageUpdate) {
 		return
 	}
 	if len(m.Embeds) > 0 {
-		send(m.Embeds)
+		send(m.Embeds, nil, m)
 		return
 	}
 }
@@ -124,10 +124,12 @@ func replay(m *discord.MessageCreate) {
 	request(body)
 }
 
-func send(embeds []*discord.MessageEmbed) {
+func send(embeds []*discord.MessageEmbed, m *discord.MessageCreate, m2 *discord.MessageUpdate) {
 	body := ReqCb{
-		Embeds: embeds,
-		Type:   RichText,
+		Discord:       m,
+		DiscordUpdate: m2,
+		Embeds:        embeds,
+		Type:          RichText,
 	}
 	request(body)
 }
