@@ -13,6 +13,7 @@ type RequestTrigger struct {
 	Prompt       string `json:"prompt,omitempty"`
 	Index        int64  `json:"index,omitempty"`
 	Flags        int64  `json:"flags,omitempty"`
+	Nonce        string `json:"nonce,omitempty"`
 }
 
 func MidjourneyBot(c *gin.Context) {
@@ -25,11 +26,11 @@ func MidjourneyBot(c *gin.Context) {
 	var err error
 	switch body.Type {
 	case "generate":
-		err = GenerateImage(body.Prompt)
+		err = GenerateImage(body.Prompt, body.Nonce)
 	case "upscale":
-		err = ImageUpscale(body.Index, body.DiscordMsgId, body.MsgHash, body.Flags)
+		err = ImageUpscale(body.Index, body.DiscordMsgId, body.MsgHash, body.Flags, body.Nonce)
 	case "variation":
-		err = ImageVariation(body.Index, body.DiscordMsgId, body.MsgHash, body.Flags)
+		err = ImageVariation(body.Index, body.DiscordMsgId, body.MsgHash, body.Flags, body.Nonce)
 	case "maxUpscale":
 		err = ImageMaxUpscale(body.DiscordMsgId, body.MsgHash)
 	case "reset":

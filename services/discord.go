@@ -19,7 +19,7 @@ const (
 	Id              string = "938956540159881230"
 )
 
-func GenerateImage(prompt string) error {
+func GenerateImage(prompt, nonce string) error {
 	requestBody := ReqTriggerDiscord{
 		Type:          2,
 		GuildID:       config.GetConfig().DISCORD_SERVER_ID,
@@ -47,12 +47,13 @@ func GenerateImage(prompt string) error {
 			},
 			Attachments: []ReqCommandAttachments{},
 		},
+		Nonce: nonce,
 	}
 	_, err := request(requestBody, url)
 	return err
 }
 
-func Upscale(index int64, messageId string, messageHash string, messageFlags int64) error {
+func Upscale(index int64, messageId string, messageHash string, messageFlags int64, nonce string) error {
 	requestBody := ReqUpscaleDiscord{
 		Type:          3,
 		GuildId:       config.GetConfig().DISCORD_SERVER_ID,
@@ -65,11 +66,13 @@ func Upscale(index int64, messageId string, messageHash string, messageFlags int
 			ComponentType: 2,
 			CustomId:      fmt.Sprintf("MJ::JOB::upsample::%d::%s", index, messageHash),
 		},
+		Nonce: nonce,
 	}
 	_, err := request(requestBody, url)
 	return err
 }
 
+// 未知
 func MaxUpscale(messageId string, messageHash string) error {
 	requestBody := ReqUpscaleDiscord{
 		Type:          3,
@@ -93,7 +96,8 @@ func MaxUpscale(messageId string, messageHash string) error {
 	return err
 }
 
-func Variate(index int64, messageId string, messageHash string, messageFlags int64) error {
+// 变体
+func Variate(index int64, messageId string, messageHash string, messageFlags int64, nonce string) error {
 	requestBody := ReqVariationDiscord{
 		Type:          3,
 		GuildId:       config.GetConfig().DISCORD_SERVER_ID,
@@ -106,11 +110,13 @@ func Variate(index int64, messageId string, messageHash string, messageFlags int
 			ComponentType: 2,
 			CustomId:      fmt.Sprintf("MJ::JOB::variation::%d::%s", index, messageHash),
 		},
+		Nonce: nonce,
 	}
 	_, err := request(requestBody, url)
 	return err
 }
 
+// VariatePrompt 带提示词的放大 暂时不需要
 func VariatePrompt(index int64, messageId string, messageHash string, prompt string) error {
 	requestBody := ReqVariationVariatePromptDiscord{
 		Type:          5,
@@ -149,6 +155,7 @@ func VariatePrompt(index int64, messageId string, messageHash string, prompt str
 	return err
 }
 
+// 重绘
 func ReRoll(messageId string, messageHash string) error {
 	requestBody := ReqResetDiscord{
 		Type:          3,
@@ -221,48 +228,6 @@ func Attachments(name string, size int64) (ResAttachments, error) {
 	}
 
 	return data, err
-}
-
-func GetMessage(limit int) error {
-	getMessageUrl := fmt.Sprintf("https://discord.com/api/v9/channels/%s/messages?limit=%d", config.GetConfig().DISCORD_CHANNEL_ID, limit)
-
-	req, err := http.NewRequest("GET", getMessageUrl, nil)
-
-	if err != nil {
-		return fmt.Errorf("error creating request:%v", err)
-	}
-
-	req.Header.Set("Content-Type", "application/json")
-	req.Header.Set("Authorization", config.GetConfig().DISCORD_USER_TOKEN)
-
-	client := &http.Client{}
-	resp, err := client.Do(req)
-	if err != nil {
-		return fmt.Errorf("error making request:%v", err)
-
-	}
-	defer resp.Body.Close()
-	body, err := ioutil.ReadAll(resp.Body)
-	if err != nil {
-		return fmt.Errorf("Error reading response:%v", err)
-
-	}
-	// 使用 map[string]interface{} 解析 JSON 响应
-	var result []map[string]interface{}
-	err = json.Unmarshal(body, &result)
-	if err != nil {
-		return fmt.Errorf("error unmarshalling JSON: %v", err)
-	}
-
-	// 将解析后的 JSON 格式化输出
-	jsonData, err := json.MarshalIndent(result, "", "  ")
-	if err != nil {
-		return fmt.Errorf("error marshalling JSON: %v", err)
-	}
-
-	// 打印格式化后的 JSON
-	fmt.Println(string(jsonData))
-	return nil
 }
 
 func request(params interface{}, url string) ([]byte, error) {

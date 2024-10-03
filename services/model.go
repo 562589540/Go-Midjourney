@@ -7,6 +7,7 @@ type ReqTriggerDiscord struct {
 	ApplicationId string    `json:"application_id"`
 	SessionId     string    `json:"session_id"`
 	Data          DSCommand `json:"data"`
+	Nonce         string    `json:"nonce,omitempty"`
 }
 
 type DSCommand struct {
@@ -55,6 +56,7 @@ type ReqUpscaleDiscord struct {
 	ApplicationId string      `json:"application_id"`
 	SessionId     string      `json:"session_id"`
 	Data          UpscaleData `json:"data"`
+	Nonce         string      `json:"nonce,omitempty"`
 }
 
 type UpscaleData struct {

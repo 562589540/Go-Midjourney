@@ -4,18 +4,18 @@ import (
 	"github.com/562589540/Go-Midjourney/services"
 )
 
-func GenerateImage(prompt string) error {
-	err := services.GenerateImage(prompt)
+func GenerateImage(prompt, nonce string) error {
+	err := services.GenerateImage(prompt, nonce)
 	return err
 }
 
-func ImageUpscale(index int64, discordMsgId string, msgHash string, messageFlags int64) error {
-	err := services.Upscale(index, discordMsgId, msgHash, messageFlags)
+func ImageUpscale(index int64, discordMsgId string, msgHash string, messageFlags int64, nonce string) error {
+	err := services.Upscale(index, discordMsgId, msgHash, messageFlags, nonce)
 	return err
 }
 
-func ImageVariation(index int64, discordMsgId string, msgHash string, messageFlags int64) error {
-	err := services.Variate(index, discordMsgId, msgHash, messageFlags)
+func ImageVariation(index int64, discordMsgId string, msgHash string, messageFlags int64, nonce string) error {
+	err := services.Variate(index, discordMsgId, msgHash, messageFlags, nonce)
 	return err
 }
 
