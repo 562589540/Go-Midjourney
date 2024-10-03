@@ -54,7 +54,7 @@ func DiscordMsgCreate(s *discord.Session, m *discord.MessageCreate) {
 
 	if strings.Contains(m.Content, "(Waiting to start)") && !strings.Contains(m.Content, "Rerolling **") {
 		//开始工作
-		trigger(m.Content, FirstTrigger)
+		triggerCreate(m.Content, m, FirstTrigger)
 		return
 	}
 
@@ -98,7 +98,7 @@ func DiscordMsgUpdate(s *discord.Session, m *discord.MessageUpdate) {
 	}
 
 	if strings.Contains(m.Content, "(Stopped)") {
-		trigger(m.Content, GenerateEditError)
+		triggerUpdate(m.Content, m, GenerateEditError)
 		return
 	}
 	if len(m.Embeds) > 0 {
@@ -132,10 +132,20 @@ func send(embeds []*discord.MessageEmbed) {
 	request(body)
 }
 
-func trigger(content string, t Scene) {
+func triggerCreate(content string, m *discord.MessageCreate, t Scene) {
 	body := ReqCb{
+		Discord: m,
 		Content: content,
 		Type:    t,
+	}
+	request(body)
+}
+
+func triggerUpdate(content string, m *discord.MessageUpdate, t Scene) {
+	body := ReqCb{
+		DiscordUpdate: m,
+		Content:       content,
+		Type:          t,
 	}
 	request(body)
 }
