@@ -95,7 +95,7 @@ func UpscaleSubtle(messageId string, messageHash string, messageFlags int64, non
 	return err
 }
 
-// 未知
+// MaxUpscale 未知
 func MaxUpscale(messageId string, messageHash string) error {
 	requestBody := ReqUpscaleDiscord{
 		Type:          3,
@@ -114,7 +114,7 @@ func MaxUpscale(messageId string, messageHash string) error {
 	return err
 }
 
-// 变体
+// Variate 变体
 func Variate(index int64, messageId string, messageHash string, messageFlags int64, nonce string) error {
 	requestBody := ReqVariationDiscord{
 		Type:          3,
@@ -173,7 +173,7 @@ func VariatePrompt(index int64, messageId string, messageHash string, prompt str
 	return err
 }
 
-// 重绘
+// ReRoll 重绘
 func ReRoll(messageId string, messageHash string) error {
 	requestBody := ReqResetDiscord{
 		Type:          3,

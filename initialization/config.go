@@ -12,7 +12,7 @@ var (
 	ProxyUrl = ""
 )
 
-// 定义回调类型为字符串类型
+// CallBackType 定义回调类型为字符串类型
 type CallBackType string
 
 // 定义允许的回调类型常量
