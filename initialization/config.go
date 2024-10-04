@@ -6,7 +6,10 @@ import (
 	"github.com/spf13/viper"
 )
 
-var Debug = false
+var (
+	Debug   = false
+	OnProxy = false
+)
 
 // 定义回调类型为字符串类型
 type CallBackType string
