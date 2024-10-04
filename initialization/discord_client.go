@@ -7,7 +7,10 @@ import (
 	"net/http"
 )
 
-var discordClient *discord.Session
+var (
+	Listening     = false
+	discordClient *discord.Session
+)
 
 func InitDiscord() error {
 
@@ -34,15 +37,12 @@ func InitDiscord() error {
 	return nil
 }
 
-// ClearProxy 取消代理的函数
+// ClearProxy 取消代理的函数 需要重新启动监控和初始化
 func ClearProxy() error {
 	StopDiscordMonitor()
-	if err := InitDiscord(); err != nil {
-		return err
-	}
+	gclient.GetGclient().ClearProxy()
 	OnProxy = false
 	ProxyUrl = ""
-	gclient.GetGclient().ClearProxy()
 	return nil
 }
 
@@ -62,11 +62,16 @@ func SetProxy(proxyURL string) error {
 }
 
 func LoadDiscordClient(create func(s *discord.Session, m *discord.MessageCreate), update func(s *discord.Session, m *discord.MessageUpdate)) error {
+	if Listening {
+		fmt.Println("Discord client is already running")
+		return nil
+	}
 	if err := discordClient.Open(); err != nil {
 		return fmt.Errorf("error opening connection: %v", err)
 	}
 	discordClient.AddHandler(create)
 	discordClient.AddHandler(update)
+	Listening = true
 	return nil
 }
 
@@ -85,6 +90,7 @@ func StopDiscordMonitor() {
 	} else {
 		fmt.Println("Discord client is not running")
 	}
+	Listening = false
 }
 
 func GetDiscordClient() *discord.Session {
