@@ -7,8 +7,9 @@ import (
 )
 
 var (
-	Debug   = false
-	OnProxy = false
+	Debug    = false
+	OnProxy  = false
+	ProxyUrl = ""
 )
 
 // 定义回调类型为字符串类型

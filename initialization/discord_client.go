@@ -35,12 +35,13 @@ func InitDiscord() error {
 }
 
 // ClearProxy 取消代理的函数
-func ClearProxy(proxyURL string) error {
+func ClearProxy() error {
 	StopDiscordMonitor()
 	if err := InitDiscord(); err != nil {
 		return err
 	}
 	OnProxy = false
+	ProxyUrl = ""
 	gclient.GetGclient().ClearProxy()
 	return nil
 }
@@ -56,6 +57,7 @@ func SetProxy(proxyURL string) error {
 	//设置ws
 	discordClient.Dialer.Proxy = http.ProxyURL(proxy)
 	OnProxy = true
+	ProxyUrl = proxyURL
 	return nil
 }
 
