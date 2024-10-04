@@ -2,6 +2,7 @@ package services
 
 import (
 	"fmt"
+	"github.com/562589540/Go-Midjourney/gclient"
 	"image"
 	"image/jpeg"
 	"io"
@@ -12,8 +13,12 @@ import (
 
 // DownloadImage 下载图片并保存到本地
 func DownloadImage(url, filepath string) error {
+
+	client := gclient.GetGclient().GetHTTPClient()
+
 	// 发送HTTP请求获取图片
-	resp, err := http.Get(url)
+	resp, err := client.Get(url)
+
 	if err != nil {
 		return fmt.Errorf("failed to download image: %v", err)
 	}
