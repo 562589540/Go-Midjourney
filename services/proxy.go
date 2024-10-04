@@ -1,6 +1,8 @@
 package services
 
-import "os"
+import (
+	"os"
+)
 
 func OnProxy(http, https string) {
 	// 设置代理

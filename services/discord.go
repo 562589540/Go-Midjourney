@@ -4,11 +4,14 @@ import (
 	"bytes"
 	"encoding/json"
 	"fmt"
+	"github.com/562589540/Go-Midjourney/gclient"
 	config "github.com/562589540/Go-Midjourney/initialization"
 	"io/ioutil"
 	"net/http"
 	"path/filepath"
 )
+
+var proxyURL = ""
 
 const (
 	url             string = "https://discord.com/api/v9/interactions"
@@ -271,7 +274,9 @@ func request(params interface{}, url string) ([]byte, error) {
 	}
 	req.Header.Set("Content-Type", "application/json")
 	req.Header.Set("Authorization", config.GetConfig().DISCORD_USER_TOKEN)
-	client := &http.Client{}
+
+	client := gclient.GetGclient().GetHTTPClient()
+
 	response, err := client.Do(req)
 	if err != nil {
 		return nil, err
