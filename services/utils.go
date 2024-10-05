@@ -11,7 +11,7 @@ import (
 )
 
 // ExtractMessageDetails 提取 messageId 和 messageHash
-func ExtractMessageDetails(m *discord.MessageCreate) (string, string) {
+func ExtractMessageDetails(m *discord.Message) (string, string) {
 	// 提取 messageId
 	messageId := m.ID
 
@@ -27,7 +27,7 @@ func ExtractMessageDetails(m *discord.MessageCreate) (string, string) {
 }
 
 // ExtractImageDetails 提取绘画后的图片
-func ExtractImageDetails(m *discord.MessageCreate) *discord.MessageAttachment {
+func ExtractImageDetails(m *discord.Message) *discord.MessageAttachment {
 	if len(m.Attachments) > 0 {
 		return m.Attachments[0]
 	}
