@@ -113,12 +113,10 @@ func DiscordMsgUpdate(s *discord.Session, m *discord.MessageUpdate) {
 
 	//反推的
 	if m.Interaction != nil && m.Interaction.Name == "describe" {
-		if m.Embeds != nil && len(m.Embeds) > 0 {
-			if m.Embeds[0].Image != nil {
-				if m.Embeds[0].Image.Width > 0 && m.Embeds[0].Image.Height > 0 && m.Embeds[0].Description != "" {
-					notice(m.Message, 0, Describe, "")
-					return
-				}
+		if m.Embeds != nil && len(m.Embeds) > 0 && m.Embeds[0].Description != "" && m.Embeds[0].Image != nil {
+			if m.Embeds[0].Image.Width > 0 && m.Embeds[0].Image.Height > 0 {
+				notice(m.Message, 0, Describe, "")
+				return
 			}
 		}
 		notice(m.Message, 0, DescribeGet, "")
