@@ -33,16 +33,18 @@ const (
 type ReqMessage struct {
 	Message  *discord.Message `json:"message,omitempty"`
 	Content  string           `json:"content,omitempty"`
+	Error    string           `json:"error,omitempty"`
 	Progress int              `json:"progress,omitempty"`
 	Type     Scene            `json:"type"`
 }
 
-func notice(m *discord.Message, progress int, scene Scene) {
+func notice(m *discord.Message, progress int, scene Scene, err string) {
 	request(ReqMessage{
 		Message:  m,         //消息体
 		Content:  m.Content, //消息文本
 		Type:     scene,     //场景
 		Progress: progress,  //进度
+		Error:    err,       //进度
 	})
 }
 

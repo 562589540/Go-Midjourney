@@ -1,6 +1,7 @@
 package handlers
 
 import (
+	"fmt"
 	"github.com/562589540/Go-Midjourney/initialization"
 	"github.com/562589540/Go-Midjourney/services"
 	discord "github.com/bwmarrin/discordgo"
@@ -30,26 +31,49 @@ func DiscordMsgCreate(s *discord.Session, m *discord.MessageCreate) {
 
 	if strings.Contains(m.Content, "(Waiting to start)") && !strings.Contains(m.Content, "Rerolling **") {
 		//开始工作
-		notice(m.Message, 0, FirstTrigger)
+		notice(m.Message, 0, FirstTrigger, "")
 		return
 	}
-
-	//快速出图用尽
 
 	//有绘画结果
 	for _, attachment := range m.Attachments {
 		if attachment.Width > 0 && attachment.Height > 0 {
 			//绘画结束
-			notice(m.Message, 1, GenerateEnd)
+			notice(m.Message, 1, GenerateEnd, "")
 			return
 		}
 	}
 
 	//一些错误处理
-	//if len(m.Embeds) > 0 {
-	//	sendError(m.Embeds, m.Message)
-	//	return
-	//}
+	if len(m.Embeds) > 0 {
+		embeds := m.Embeds[0]
+		switch embeds.Color {
+		case 16711680:
+			if embeds.Title == "Action needed to continue" {
+				services.DebugDiscordMsg(embeds, "Action needed to continue")
+				return
+			} else if embeds.Title == "Pending mod message" {
+				services.DebugDiscordMsg(embeds, "Pending mod message")
+				return
+			}
+			notice(m.Message, 0, GenerateEditError, embeds.Description)
+			break
+		case 16776960:
+			fmt.Println("警告", embeds.Description)
+			break
+		default:
+			if strings.Contains(embeds.Title, "continue") && strings.Contains(embeds.Description, "verify you're human") {
+				notice(m.Message, 0, GenerateEditError, "人机验证："+embeds.Description)
+				return
+			}
+
+			if strings.Contains(embeds.Title, "Invalid") {
+				notice(m.Message, 0, GenerateEditError, "无效的"+embeds.Description)
+				return
+			}
+		}
+		return
+	}
 }
 
 func DiscordMsgUpdate(s *discord.Session, m *discord.MessageUpdate) {
@@ -71,12 +95,13 @@ func DiscordMsgUpdate(s *discord.Session, m *discord.MessageUpdate) {
 
 	//提取到了进度
 	if progress, err := services.ExtractProgress(m.Content); err == nil {
-		notice(m.Message, progress, GenerateProgress)
+		notice(m.Message, progress, GenerateProgress, "")
+		return
 	}
 
 	//有错误？？？？
 	if strings.Contains(m.Content, "(Stopped)") {
-		notice(m.Message, 0, GenerateEditError)
+		notice(m.Message, 0, GenerateEditError, "")
 		return
 	}
 
@@ -85,12 +110,12 @@ func DiscordMsgUpdate(s *discord.Session, m *discord.MessageUpdate) {
 		if m.Embeds != nil && len(m.Embeds) > 0 {
 			if m.Embeds[0].Image != nil {
 				if m.Embeds[0].Image.Width > 0 && m.Embeds[0].Image.Height > 0 && m.Embeds[0].Description != "" {
-					notice(m.Message, 1, Describe)
+					notice(m.Message, 0, Describe, "")
 					return
 				}
 			}
 		}
-		notice(m.Message, 0, DescribeGet)
+		notice(m.Message, 0, DescribeGet, "")
 		return
 	}
 }
