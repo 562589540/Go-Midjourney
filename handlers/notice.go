@@ -10,6 +10,8 @@ type Scene string
 const (
 	// FirstTrigger /** 首次触发生成 */
 	FirstTrigger Scene = "FirstTrigger"
+	// FirstDescribe /** 反推首次触发生成 */
+	FirstDescribe Scene = "FirstDescribe"
 	// GenerateEnd /** 生成图片结束 */
 	GenerateEnd Scene = "GenerateEnd"
 	// GenerateEditError /** 发送的指令midjourney生成过程中发现错误 */

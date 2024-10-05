@@ -35,6 +35,12 @@ func DiscordMsgCreate(s *discord.Session, m *discord.MessageCreate) {
 		return
 	}
 
+	//创建了反推提示词
+	if m.Interaction != nil && m.Interaction.Name == "describe" {
+		notice(m.Message, 0, FirstDescribe, "")
+	}
+
+	//提示词获取开始
 	//有绘画结果
 	for _, attachment := range m.Attachments {
 		if attachment.Width > 0 && attachment.Height > 0 {
