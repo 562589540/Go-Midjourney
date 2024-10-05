@@ -29,8 +29,8 @@ func ImageReset(discordMsgId string, msgHash string) error {
 	return err
 }
 
-func ImageDescribe(uploadName string) error {
-	err := services.Describe(uploadName)
+func ImageDescribe(uploadName, nonce string) error {
+	err := services.Describe(uploadName, nonce)
 	return err
 }
 

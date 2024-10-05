@@ -36,7 +36,7 @@ func MidjourneyBot(c *gin.Context) {
 	case "reset":
 		err = ImageReset(body.DiscordMsgId, body.MsgHash)
 	case "describe":
-		err = ImageDescribe(body.Prompt)
+		err = ImageDescribe(body.Prompt, body.Nonce)
 	default:
 		err = errors.New("invalid type")
 	}

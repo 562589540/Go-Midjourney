@@ -8,11 +8,11 @@ import (
 	"strings"
 )
 
-var callBackFun func(params ReqCb)
+var callBackFun func(params ReqMessage)
 
 // CallbackHandler defines a contract for callback handling
 type CallbackHandler interface {
-	HandleCallback(params ReqCb) error
+	HandleCallback(params ReqMessage) error
 }
 
 // HTTPCallbackHandler handles the callback via HTTP POST request
@@ -22,7 +22,7 @@ type HTTPCallbackHandler struct{}
 type LocalCallbackHandler struct{}
 
 // HandleCallback for HTTP
-func (h *HTTPCallbackHandler) HandleCallback(params ReqCb) error {
+func (h *HTTPCallbackHandler) HandleCallback(params ReqMessage) error {
 	data, err := json.Marshal(params)
 	if err != nil {
 		return fmt.Errorf("json marshal error: %v", err)
@@ -45,7 +45,7 @@ func (h *HTTPCallbackHandler) HandleCallback(params ReqCb) error {
 }
 
 // HandleCallback for Local
-func (l *LocalCallbackHandler) HandleCallback(params ReqCb) error {
+func (l *LocalCallbackHandler) HandleCallback(params ReqMessage) error {
 	if callBackFun != nil {
 		callBackFun(params)
 	}
@@ -65,6 +65,6 @@ func getCallbackHandler() CallbackHandler {
 }
 
 // BindCallBackFun 绑定回掉方法 对外暴露方便调用本库使用者使用监控回调
-func BindCallBackFun(cd func(params ReqCb)) {
+func BindCallBackFun(cd func(params ReqMessage)) {
 	callBackFun = cd
 }

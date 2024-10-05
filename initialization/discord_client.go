@@ -30,6 +30,7 @@ func InitDiscord() error {
 		discordClient, err = discord.New(config.DISCORD_USER_TOKEN)
 	}
 
+	//discordClient.LogLevel = 10
 	if err != nil {
 		return fmt.Errorf("error creating Discord session: %v", err)
 	}

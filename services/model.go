@@ -31,10 +31,13 @@ type DSApplicationCommand struct {
 	ApplicationId            string            `json:"application_id"`
 	Version                  string            `json:"version"`
 	DefaultPermission        bool              `json:"default_permission"`
+	DescriptionLocalized     string            `json:"description_localized,omitempty"`
+	NameLocalized            string            `json:"name_localized,omitempty"`
 	DefaultMemberPermissions map[string]int    `json:"default_member_permissions"`
 	Type                     int64             `json:"type"`
 	Nsfw                     bool              `json:"nsfw"`
 	Name                     string            `json:"name"`
+	GlobalPopularityRank     int64             `json:"global_popularity_rank,omitempty"`
 	Description              string            `json:"description"`
 	DmPermission             bool              `json:"dm_permission"`
 	Options                  []DSCommandOption `json:"options"`

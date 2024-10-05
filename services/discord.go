@@ -16,6 +16,7 @@ var proxyURL = ""
 const (
 	url             string = "https://discord.com/api/v9/interactions"
 	uploadUrlFormat string = "https://discord.com/api/v9/channels/%s/attachments"
+	messagesFormat  string = "https://discord.com/api/v9/channels/%s/messages"
 	appId           string = "936929561302675456"
 	SessionID       string = "b1bf42be072a0c8c706e153bf37585b6"
 	Version         string = "1237876415471554623"
@@ -192,23 +193,24 @@ func ReRoll(messageId string, messageHash string) error {
 	return err
 }
 
-func Describe(uploadName string) error {
+func Describe(uploadName, nonce string) error {
 	requestBody := ReqTriggerDiscord{
 		Type:          2,
 		GuildID:       config.GetConfig().DISCORD_SERVER_ID,
 		ChannelID:     config.GetConfig().DISCORD_CHANNEL_ID,
 		ApplicationId: appId,
-		SessionId:     SessionID,
+		SessionId:     "61bf64a2e6e4d9a22a4b09e15a151a2d",
+		Nonce:         nonce,
 		Data: DSCommand{
-			Version: Version,
-			Id:      Id,
+			Version: "1237876415471554625",
+			Id:      "1092492867185950852",
 			Name:    "describe",
 			Type:    1,
 			Options: []DSOption{{Type: 11, Name: "image", Value: 0}},
 			ApplicationCommand: DSApplicationCommand{
-				Id:                       Id,
+				Id:                       "1092492867185950852",
 				ApplicationId:            appId,
-				Version:                  Version,
+				Version:                  "1237876415471554625",
 				DefaultPermission:        true,
 				DefaultMemberPermissions: nil,
 				Type:                     1,
@@ -263,6 +265,27 @@ func genUpscaleDiscordReq(messageId, nonce string, data UpscaleData) ReqUpscaleD
 	}
 }
 
+func PutUploadMessages(nonce, uploadedFilename string) error {
+	filename := filepath.Base(uploadedFilename)
+	attachments := []map[string]string{
+		{
+			"id":                "0",
+			"filename":          filename,
+			"uploaded_filename": uploadedFilename,
+		},
+	}
+	data := map[string]interface{}{
+		"content":     "",
+		"nonce":       nonce,
+		"channel_id":  config.GetConfig().DISCORD_CHANNEL_ID,
+		"type":        0,
+		"sticker_ids": []interface{}{},
+		"attachments": attachments,
+	}
+	_, err := request(data, fmt.Sprintf(messagesFormat, config.GetConfig().DISCORD_CHANNEL_ID))
+	return err
+}
+
 func request(params interface{}, url string) ([]byte, error) {
 	requestData, err := json.Marshal(params)
 	if err != nil {
@@ -285,4 +308,23 @@ func request(params interface{}, url string) ([]byte, error) {
 	bod, respErr := ioutil.ReadAll(response.Body)
 	fmt.Println("response:", string(bod), respErr, response.Status, url)
 	return bod, respErr
+}
+
+func TestApi(jsonPath string) {
+	// 读取 JSON 文件
+	file, err := ioutil.ReadFile(jsonPath)
+	if err != nil {
+		fmt.Printf("Failed to read JSON file: %v\n", err)
+		return
+	}
+	// 将 JSON 解析到 map 中
+	var requestData map[string]interface{}
+	if err := json.Unmarshal(file, &requestData); err != nil {
+		fmt.Printf("Failed to decode JSON data: %v\n", err)
+		return
+	}
+	_, err = request(requestData, url)
+	if err != nil {
+		fmt.Println(err)
+	}
 }
