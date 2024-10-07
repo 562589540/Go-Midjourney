@@ -35,11 +35,6 @@ func DiscordMsgCreate(s *discord.Session, m *discord.MessageCreate) {
 		return
 	}
 
-	if m.Nonce != "" {
-		notice(m.Message, 0, BindMessageId, "")
-		return
-	}
-
 	//创建了反推提示词
 	if m.Interaction != nil && m.Interaction.Name == "describe" {
 		notice(m.Message, 0, FirstDescribe, "")
@@ -83,6 +78,11 @@ func DiscordMsgCreate(s *discord.Session, m *discord.MessageCreate) {
 				return
 			}
 		}
+		return
+	}
+
+	if m.Nonce != "" {
+		notice(m.Message, 0, BindMessageId, "")
 		return
 	}
 }
