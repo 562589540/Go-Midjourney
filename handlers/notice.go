@@ -8,6 +8,10 @@ import (
 type Scene string
 
 const (
+	// BindMessageId /** 绑定消息Id */
+	BindMessageId Scene = "BindMessageId"
+	// WaitingToStart /** 等待开始 */
+	WaitingToStart Scene = "WaitingToStart "
 	// FirstTrigger /** 首次触发生成 */
 	FirstTrigger Scene = "FirstTrigger"
 	// FirstDescribe /** 反推首次触发生成 */

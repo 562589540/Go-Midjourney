@@ -31,7 +31,12 @@ func DiscordMsgCreate(s *discord.Session, m *discord.MessageCreate) {
 
 	if strings.Contains(m.Content, "(Waiting to start)") && !strings.Contains(m.Content, "Rerolling **") {
 		//开始工作
-		notice(m.Message, 0, FirstTrigger, "")
+		notice(m.Message, 0, WaitingToStart, "")
+		return
+	}
+
+	if m.Nonce != "" {
+		notice(m.Message, 0, BindMessageId, "")
 		return
 	}
 
@@ -98,6 +103,12 @@ func DiscordMsgUpdate(s *discord.Session, m *discord.MessageUpdate) {
 	}
 
 	services.DebugDiscordMsg(m, "消息更新")
+
+	if strings.Contains(m.Content, "(Waiting to start)") && !strings.Contains(m.Content, "Rerolling **") {
+		//开始工作
+		notice(m.Message, 0, WaitingToStart, "")
+		return
+	}
 
 	//提取到了进度
 	if progress, err := services.ExtractProgress(m.Content); err == nil {
