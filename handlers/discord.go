@@ -51,33 +51,7 @@ func DiscordMsgCreate(s *discord.Session, m *discord.MessageCreate) {
 	}
 
 	//一些错误处理
-	if len(m.Embeds) > 0 {
-		embeds := m.Embeds[0]
-		switch embeds.Color {
-		case 16711680:
-			if embeds.Title == "Action needed to continue" {
-				services.DebugDiscordMsg(embeds, "Action needed to continue")
-				return
-			} else if embeds.Title == "Pending mod message" {
-				services.DebugDiscordMsg(embeds, "Pending mod message")
-				return
-			}
-			notice(m.Message, 0, GenerateEditError, embeds.Description)
-			break
-		case 16776960:
-			fmt.Println("警告", embeds.Description)
-			break
-		default:
-			if strings.Contains(embeds.Title, "continue") && strings.Contains(embeds.Description, "verify you're human") {
-				notice(m.Message, 0, GenerateEditError, "人机验证："+embeds.Description)
-				return
-			}
-
-			if strings.Contains(embeds.Title, "Invalid") {
-				notice(m.Message, 0, GenerateEditError, "无效的"+embeds.Description)
-				return
-			}
-		}
+	if handlerError(m.Message) {
 		return
 	}
 
@@ -133,4 +107,42 @@ func DiscordMsgUpdate(s *discord.Session, m *discord.MessageUpdate) {
 		notice(m.Message, 0, DescribeGet, "")
 		return
 	}
+
+	//一些错误处理
+	if handlerError(m.Message) {
+		return
+	}
+}
+
+func handlerError(m *discord.Message) bool {
+	if len(m.Embeds) > 0 {
+		embeds := m.Embeds[0]
+		switch embeds.Color {
+		case 16711680:
+			if embeds.Title == "Action needed to continue" {
+				services.DebugDiscordMsg(embeds, "Action needed to continue")
+				return true
+			} else if embeds.Title == "Pending mod message" {
+				services.DebugDiscordMsg(embeds, "Pending mod message")
+				return true
+			}
+			notice(m, 0, GenerateEditError, embeds.Description)
+			break
+		case 16776960:
+			fmt.Println("警告", embeds.Description)
+			break
+		default:
+			if strings.Contains(embeds.Title, "continue") && strings.Contains(embeds.Description, "verify you're human") {
+				notice(m, 0, GenerateEditError, "人机验证："+embeds.Description)
+				return true
+			}
+
+			if strings.Contains(embeds.Title, "Invalid") {
+				notice(m, 0, GenerateEditError, "无效的"+embeds.Description)
+				return true
+			}
+		}
+		return true
+	}
+	return false
 }
