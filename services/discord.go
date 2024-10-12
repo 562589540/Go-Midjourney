@@ -11,17 +11,48 @@ import (
 	"path/filepath"
 )
 
-var proxyURL = ""
+const (
+	MidjourneyBot = "936929561302675456"
+	NijiBot       = "1022952195194359889"
+
+	MidjourneyID = "938956540159881230"
+	NijiID       = "1023054140580057099"
+
+	MidjourneySessionID = "b1bf42be072a0c8c706e153bf37585b6"
+	NijiSessionID       = "59799726189462c9c125c5d87d28278e"
+
+	MidjourneyVersion = "1237876415471554623"
+	NijiVersion       = "1248805223892254774"
+)
+
+var (
+	proxyURL         = ""
+	appId            = MidjourneyBot
+	Id        string = MidjourneyID
+	SessionID string = MidjourneySessionID
+	Version   string = NijiVersion
+)
 
 const (
 	url             string = "https://discord.com/api/v9/interactions"
 	uploadUrlFormat string = "https://discord.com/api/v9/channels/%s/attachments"
 	messagesFormat  string = "https://discord.com/api/v9/channels/%s/messages"
-	appId           string = "936929561302675456"
-	SessionID       string = "b1bf42be072a0c8c706e153bf37585b6"
-	Version         string = "1237876415471554623"
-	Id              string = "938956540159881230"
 )
+
+func OnMidjourneyBot() {
+	appId = MidjourneyBot
+	Id = MidjourneyID
+	SessionID = MidjourneySessionID
+	Version = MidjourneyVersion
+
+}
+
+func OnNijiBot() {
+	appId = NijiBot
+	Id = NijiID
+	SessionID = NijiSessionID
+	Version = NijiVersion
+}
 
 func GenerateImage(prompt, nonce string) error {
 	requestBody := ReqTriggerDiscord{
