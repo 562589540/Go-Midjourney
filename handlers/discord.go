@@ -141,6 +141,10 @@ func handlerError(m *discord.Message) bool {
 				notice(m, 0, GenerateEditError, "无效的"+embeds.Description)
 				return true
 			}
+			//任务阻塞中 不足以抛出错误 让业务者处理
+			if strings.Contains(embeds.Title, "Job queued") {
+				return false
+			}
 		}
 		return true
 	}
