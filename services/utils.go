@@ -129,3 +129,7 @@ func DebugDiscordMsg(m any, t string) {
 	fmt.Println(t)
 	fmt.Println(string(jsonData))
 }
+
+func PushPromptNonce(prompt string, nonce uint64) string {
+	return fmt.Sprintf("[%d] %s", nonce, prompt)
+}
