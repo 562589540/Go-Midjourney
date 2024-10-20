@@ -4,6 +4,7 @@ import (
 	"fmt"
 	"github.com/562589540/Go-Midjourney/initialization"
 	"github.com/bwmarrin/discordgo"
+	"regexp"
 )
 
 // GatherResult 用于打包消息结果
@@ -27,7 +28,14 @@ func GatherDoneImage(limit int) (map[string]GatherResult, error) {
 		return nil, fmt.Errorf("no messages found")
 	}
 
-	//DebugDiscordMsg(message, "采集信息")
+	DebugDiscordMsg(message, "采集信息")
+
+	//- Image #1 - Image #3 //符合这种类型的就是 放大指令的结果
+	// Making variations for
+	//- Variations 带有这种的是 v指令进行中 - Variations (Strong) //v指令结束
+	//我们需要的是过滤 因为采集 我们只要4宫格
+
+	//重绘开始 Making variations for image #1 with prompt [148390667393957889] 1 女孩, 日本动漫风格，HD，8k --niji 6 --ar 1:1 - @wong (Waiting to start)
 
 	// 创建结果 map
 	resultMap := make(map[string]GatherResult)
@@ -37,6 +45,11 @@ func GatherDoneImage(limit int) (map[string]GatherResult, error) {
 		taskId := ExtractNonceFromContent(d.Content)
 		if taskId == "" {
 			continue // taskId 为空，跳过
+		}
+
+		//过滤uv指令的数据
+		if !isZoomInstructionResult(d.Content) {
+			continue
 		}
 
 		// 遍历消息中的附件
@@ -61,4 +74,23 @@ func GatherDoneImage(limit int) (map[string]GatherResult, error) {
 		}
 	}
 	return resultMap, nil
+}
+
+// 判断字符串是否是符合放大指令的结果
+func isZoomInstructionResult(s string) bool {
+	// 匹配 "- Image #X" 的模式，X 为不定的数字
+	zoomPattern := regexp.MustCompile(`- Image #\d+`)
+
+	// 排除包含 "- Variations" 或 "- Variations (Strong)"
+	variationPattern := regexp.MustCompile(`- Variations| - Variations \(Strong\)`)
+
+	// 先检查是否匹配放大指令
+	if zoomPattern.MatchString(s) {
+		// 再检查是否包含不需要的 Variations 格式
+		if !variationPattern.MatchString(s) {
+			return true // 符合要求的字符串
+		}
+	}
+
+	return false // 不符合要求
 }
