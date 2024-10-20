@@ -340,7 +340,7 @@ func request(params interface{}, url string) ([]byte, error) {
 	bod, respErr := ioutil.ReadAll(response.Body)
 	fmt.Println("response:", string(bod), respErr, response.Status, url)
 	if response.StatusCode != 204 {
-		return nil, errors.New("mj服务器相应失败")
+		return nil, errors.New("mj服务器响应失败")
 	}
 	return bod, respErr
 }
