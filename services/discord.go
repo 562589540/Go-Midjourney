@@ -3,6 +3,7 @@ package services
 import (
 	"bytes"
 	"encoding/json"
+	"errors"
 	"fmt"
 	"github.com/562589540/Go-Midjourney/gclient"
 	config "github.com/562589540/Go-Midjourney/initialization"
@@ -338,6 +339,9 @@ func request(params interface{}, url string) ([]byte, error) {
 	defer response.Body.Close()
 	bod, respErr := ioutil.ReadAll(response.Body)
 	fmt.Println("response:", string(bod), respErr, response.Status, url)
+	if response.StatusCode != 204 {
+		return nil, errors.New("mj服务器相应失败")
+	}
 	return bod, respErr
 }
 
