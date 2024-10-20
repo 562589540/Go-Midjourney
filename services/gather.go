@@ -86,11 +86,11 @@ func isZoomInstructionResult(s string) bool {
 
 	// 先检查是否匹配放大指令
 	if zoomPattern.MatchString(s) {
-		// 再检查是否包含不需要的 Variations 格式
-		if !variationPattern.MatchString(s) {
-			return true // 符合要求的字符串
-		}
+		return false
 	}
-
-	return false // 不符合要求
+	// 再检查是否包含不需要的 Variations 格式
+	if variationPattern.MatchString(s) {
+		return false
+	}
+	return true
 }
